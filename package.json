@@ -1,0 +1,84 @@
+{
+  "name": "nats-utilities",
+  "version": "0.0.1",
+  "description": "Node.js (TypeScript) HTTP Service Testing NATS Microservices",
+  "types": "build/server.d.ts",
+  "main": "build/server.js",
+  "keywords": [
+    "frm",
+    "nats",
+    "testing"
+  ],
+  "contributors": [
+    {
+      "name": "Jean-Pierre Nell",
+      "email": "jeanpierrenell997@gmail.com"
+    }
+  ],
+  "license": "ISC",
+  "engine": {
+    "node": ">= 16 < 18"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "start": "node -r dotenv/config build/server",
+    "cleanup": "rm -rf lib coverage jest.config.js.map node_modules package-lock.json",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
+    "fix": "npm run fix:prettier && npm run fix:eslint",
+    "fix:eslint": "eslint --fix \"**/*.ts\"",
+    "fix:prettier": "prettier --write \"**/*.ts\"",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint:eslint": "eslint \"**/*.ts\"",
+    "lint:prettier": "prettier --check \"**/*.ts\"",
+    "prepare": "husky install",
+    "test": "jest --config=jest.config.ts --passWithNoTests",
+    "test:watch": "jest --config=jest.config.ts --watch",
+    "test:unit": "npm run test ./src",
+    "test:integration": "npm run test ./src --detectOpenHandles"
+  },
+  "dependencies": {
+    "@frmscoe/frms-coe-lib": "^0.1.21",
+    "@types/axios": "^0.14.0",
+    "@types/koa": "^2.13.6",
+    "@types/koa-bodyparser": "^4.3.10",
+    "@types/koa-router": "^7.4.4",
+    "axios": "^0.21.4",
+    "dotenv": "^16.3.1",
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^10.0.0",
+    "koa2-swagger-ui": "^5.7.0",
+    "log4js": "^6.4.0",
+    "nats": "^2.15.1",
+    "swagger2": "^3.0.0",
+    "swagger2-koa": "^4.0.0",
+    "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/elastic-apm-node": "^2.7.0",
+    "@types/eslint": "^8.37.0",
+    "@types/jest": "^29.5.2",
+    "@types/prettier": "^2.4.0",
+    "@types/rimraf": "^3.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-prettier": "^5.0.0-alpha.2",
+    "husky": "8.0.3",
+    "jest": "^29.6.0",
+    "lint-staged": "^11.0.0",
+    "prettier": "^3.0.0",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
