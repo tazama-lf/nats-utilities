@@ -1,8 +1,8 @@
 import { type Context } from 'koa';
 import { config } from './config';
-import { loggerService } from './server';
-import { jetStreamConsume, jetStreamPublish } from './services/jetStreamService';
-import { natsServiceConsume, natsServicePublish } from './services/natsService';
+import { loggerService } from '.';
+import { jetStreamConsume, jetStreamPublish, onJetStreamMessage } from './services/jetStreamService';
+import { natsServiceSubscribe, natsServicePublish, onMessage } from './services/natsService';
 
 export const natsPublish = async (ctx: Context): Promise<any> => {
   try {
@@ -15,21 +15,22 @@ export const natsPublish = async (ctx: Context): Promise<any> => {
 
     switch (config.startupType) {
       case "jetstream":
-        returnMessage = jetStreamConsume(natsConsumer,functionName);
+        const consumer = await jetStreamConsume(natsConsumer, functionName);
+        returnMessage = onJetStreamMessage(consumer);
         await jetStreamPublish(request.message, natsDestination);
-        await returnMessage.then((message) =>{
-          returnMessage = message;
-        });
-        break;
-    
-      case "nats":
-        returnMessage = natsServiceConsume(natsConsumer,functionName);
-        await natsServicePublish(request.message, natsDestination);
-        await returnMessage.then((message) =>{
+        await returnMessage.then((message) => {
           returnMessage = message;
         });
         break;
 
+      case "nats":
+        const subscription = await natsServiceSubscribe(natsConsumer, functionName);
+        returnMessage = onMessage(subscription.subscription);
+        await natsServicePublish(subscription.natsCon, request.message, natsDestination);
+        await returnMessage.then((message) => {
+          returnMessage = message;
+        });
+        break;
       default:
         break;
     }

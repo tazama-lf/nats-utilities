@@ -3,7 +3,7 @@ import { type Server } from 'http';
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import router from './router';
-import { loggerService } from './server';
+import { loggerService } from '.';
 
 class App extends Koa {
   public servers: Server[];

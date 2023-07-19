@@ -1,4 +1,4 @@
-import { AckPolicy, ConsumerConfig, StringCodec, connect } from 'nats';
+import { AckPolicy, Consumer, ConsumerConfig, StringCodec, connect } from 'nats';
 import { config } from '../config';
 
 export const jetStreamPublish = async (message: unknown, producerStreamName: string) => {
@@ -23,7 +23,7 @@ export const jetStreamPublish = async (message: unknown, producerStreamName: str
   );
 };
 
-export const jetStreamConsume = async (consumerStreamName: string, functionName: string) => {
+export const jetStreamConsume = async (consumerStreamName: string, functionName: string): Promise<Consumer> => {
   const natsConn = await connect({
     servers: config.serverUrl,
   });
@@ -39,8 +39,11 @@ export const jetStreamConsume = async (consumerStreamName: string, functionName:
   await jsm.consumers.add(consumerStreamName, consumerCfg);
 
   // Get the consumer to listen to messages for
-  const consumer = await js.consumers.get(consumerStreamName, functionName);
+  return await js.consumers.get(consumerStreamName, functionName);
+};
 
+
+export const onJetStreamMessage = async (consumer: Consumer) => {
   // create a simple consumer and iterate over messages matching the subscription
   const sub = await consumer.consume({ max_messages: 1 });
 
@@ -50,4 +53,5 @@ export const jetStreamConsume = async (consumerStreamName: string, functionName:
     message.ack();
     return request;
   }
-};
+
+}
