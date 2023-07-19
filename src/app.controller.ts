@@ -1,8 +1,7 @@
 import { type Context } from 'koa';
-import { connect } from 'nats';
+import { config } from './config';
 import { loggerService } from './server';
 import { jetStreamConsume, jetStreamPublish } from './services/jetStreamService';
-import { config } from './config';
 import { natsServiceConsume, natsServicePublish } from './services/natsService';
 
 export const natsPublish = async (ctx: Context): Promise<any> => {
@@ -16,13 +15,20 @@ export const natsPublish = async (ctx: Context): Promise<any> => {
 
     switch (config.startupType) {
       case "jetstream":
+        returnMessage = jetStreamConsume(natsConsumer,functionName);
         await jetStreamPublish(request.message, natsDestination);
-        returnMessage = await jetStreamConsume(natsConsumer,functionName);
+        await returnMessage.then((message) =>{
+          returnMessage = message;
+        });
         break;
     
       case "nats":
+        returnMessage = natsServiceConsume(natsConsumer,functionName);
         await natsServicePublish(request.message, natsDestination);
-        returnMessage = await natsServiceConsume(natsConsumer,functionName);
+        await returnMessage.then((message) =>{
+          returnMessage = message;
+        });
+        break;
 
       default:
         break;
