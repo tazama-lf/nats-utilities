@@ -48,4 +48,4 @@ ENV prefix_logs="false"
 
 HEALTHCHECK --interval=60s CMD [ -e /tmp/.lock ] || exit 1
 
-CMD ["build/server.js"]
+CMD ["build/index.js"]
