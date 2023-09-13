@@ -27,12 +27,6 @@ RUN npm run build
 FROM gcr.io/distroless/nodejs16-debian11:nonroot
 USER nonroot
 
-COPY package*.json ./
-COPY .npmrc ./
-ARG GH_TOKEN
-RUN npm config set '@frmscoe:registry' https://npm.pkg.github.com
-RUN npm config set //npm.pkg.github.com/:_authToken ${GH_TOKEN}
-RUN npm ci --omit=dev --ignore-scripts
 
 COPY --from=builder /home/app /home/app
 
