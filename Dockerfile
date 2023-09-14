@@ -4,8 +4,6 @@ LABEL stage=build
 # Create a folder named function
 RUN mkdir -p /home/app
 
-
-
 # Wrapper/boot-strapper
 WORKDIR /home/app
 
@@ -15,8 +13,6 @@ COPY ./package-lock.json ./
 COPY ./tsconfig.json ./
 COPY ./.npmrc ./
 ARG GH_TOKEN
-RUN npm config set '@frmscoe:registry' https://npm.pkg.github.com
-RUN npm config set //npm.pkg.github.com/:_authToken ${GH_TOKEN}
 
 # Install dependencies for production
 RUN npm ci --omit=dev --ignore-scripts
@@ -26,7 +22,6 @@ RUN npm run build
 
 FROM gcr.io/distroless/nodejs16-debian11:nonroot
 USER nonroot
-
 
 COPY --from=builder /home/app /home/app
 
