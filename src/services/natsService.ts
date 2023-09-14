@@ -1,12 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-unreachable-loop */
-/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { type NatsConnection, type Subscription, connect } from 'nats';
 import { config } from '../config';
 import FRMSMessage from '@frmscoe/frms-coe-lib/lib/helpers/protobuf';
+import { loggerService } from '../';
 
-export const natsServicePublish = async (natsConnection: NatsConnection, message: object, producerStreamName: string) => {
+export const natsServicePublish = (natsConnection: NatsConnection, message: object, producerStreamName: string): void => {
   const messageFrms = FRMSMessage.create(message);
   const messageBuffer = FRMSMessage.encode(messageFrms).finish();
 
@@ -24,9 +24,9 @@ export const natsServiceSubscribe = async (consumerStreamName: string, functionN
   return { natsCon, subscription };
 };
 
-export const onMessage = async (sub: Subscription) => {
+export const onMessage = async (sub: Subscription): Promise<string | undefined> => {
   for await (const message of sub) {
-    console.debug(`${Date.now().toLocaleString()} sid:[${message?.sid}] subject:[${message.subject}]: ${message.data.length}`);
+    loggerService.debug(`${Date.now().toLocaleString()} sid:[${message?.sid}] subject:[${message.subject}]: ${message.data.length}`);
     return message.json<string>();
   }
 };
