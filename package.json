@@ -21,9 +21,9 @@
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "start": "node -r dotenv/config build/index",
+    "start": "node -r dotenv/config build/server",
     "cleanup": "rm -rf lib coverage jest.config.js.map node_modules package-lock.json",
-    "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
     "fix": "npm run fix:prettier && npm run fix:eslint",
     "fix:eslint": "eslint --fix \"**/*.ts\"",
     "fix:prettier": "prettier --write \"**/*.ts\"",
