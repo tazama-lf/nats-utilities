@@ -27,6 +27,8 @@ export const natsServiceSubscribe = async (consumerStreamName: string, functionN
 export const onMessage = async (sub: Subscription): Promise<string | undefined> => {
   for await (const message of sub) {
     loggerService.debug(`${Date.now().toLocaleString()} sid:[${message?.sid}] subject:[${message.subject}]: ${message.data.length}`);
-    return message.json<string>();
+    const decodedMessage = FRMSMessage.decode(message.data);
+    const objMessages = FRMSMessage.toObject(decodedMessage) as unknown;
+    return objMessages as string;
   }
 };
