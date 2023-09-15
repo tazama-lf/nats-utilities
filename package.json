@@ -1,6 +1,6 @@
 {
   "name": "nats-utilities",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Node.js (TypeScript) HTTP Service Testing NATS Microservices",
   "types": "build/server.d.ts",
   "main": "build/server.js",
@@ -37,14 +37,15 @@
     "test:integration": "npm run test ./src --detectOpenHandles"
   },
   "dependencies": {
-    "@frmscoe/frms-coe-lib": "^0.1.21",
+    "@frmscoe/frms-coe-lib": "^1.0.0",
+    "@frmscoe/frms-coe-startup-lib": "^2.0.0",
     "@types/axios": "^0.14.0",
     "@types/koa": "^2.13.6",
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-router": "^7.4.4",
-    "elastic-apm-node": "^3.46.0",
     "axios": "^0.21.4",
     "dotenv": "^16.3.1",
+    "elastic-apm-node": "^3.46.0",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.0.0",
@@ -53,8 +54,8 @@
     "nats": "^2.15.1",
     "swagger2": "^3.0.0",
     "swagger2-koa": "^4.0.0",
-    "typescript": "^5.0.4",
-    "tslib": "^2.6.0"
+    "tslib": "^2.6.0",
+    "typescript": "^5.0.4"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

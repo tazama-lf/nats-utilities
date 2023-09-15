@@ -12,10 +12,12 @@ export const natsPublish = async (ctx: Context): Promise<any> => {
     const functionName = request.functionName;
 
     let returnMessage;
+    let subscription;
+    let consumer;
 
     switch (config.startupType) {
-      case "jetstream":
-        const consumer = await jetStreamConsume(natsConsumer, functionName);
+      case 'jetstream':
+        consumer = await jetStreamConsume(natsConsumer, functionName);
         returnMessage = onJetStreamMessage(consumer);
         await jetStreamPublish(request.message, natsDestination);
         await returnMessage.then((message) => {
@@ -23,10 +25,10 @@ export const natsPublish = async (ctx: Context): Promise<any> => {
         });
         break;
 
-      case "nats":
-        const subscription = await natsServiceSubscribe(natsConsumer, functionName);
+      case 'nats':
+        subscription = await natsServiceSubscribe(natsConsumer, functionName);
         returnMessage = onMessage(subscription.subscription);
-        await natsServicePublish(subscription.natsCon, request.message, natsDestination);
+        natsServicePublish(subscription.natsCon, request.message, natsDestination);
         await returnMessage.then((message) => {
           returnMessage = message;
         });
