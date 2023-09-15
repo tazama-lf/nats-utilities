@@ -1,17 +1,12 @@
-/* eslint-disable no-unreachable-loop */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { type NatsConnection, type Subscription, connect } from 'nats';
+import { Msg, NatsConnection, NatsError, StringCodec, Subscription, connect } from 'nats';
 import { config } from '../config';
-import FRMSMessage from '@frmscoe/frms-coe-lib/lib/helpers/protobuf';
-import { loggerService } from '../';
 
-export const natsServicePublish = (natsConnection: NatsConnection, message: object, producerStreamName: string): void => {
-  const messageFrms = FRMSMessage.create(message);
-  const messageBuffer = FRMSMessage.encode(messageFrms).finish();
+export const natsServicePublish = async (natsConnection: NatsConnection, message: unknown, producerStreamName: string) => {
+  const sc = StringCodec();
+  const res = JSON.stringify(message);
 
   if (producerStreamName && natsConnection) {
-    natsConnection.publish(producerStreamName, messageBuffer);
+    natsConnection.publish(producerStreamName, sc.encode(res));
   }
 };
 
@@ -20,15 +15,13 @@ export const natsServiceSubscribe = async (consumerStreamName: string, functionN
   const natsCon = await connect({
     servers: servUrl,
   });
-  const subscription = natsCon.subscribe(consumerStreamName, { queue: `${functionName}` });
+  let subscription = natsCon.subscribe(consumerStreamName, { queue: `${functionName}` });
   return { natsCon, subscription };
 };
 
-export const onMessage = async (sub: Subscription): Promise<string | undefined> => {
+export const onMessage = async (sub: Subscription) => {
   for await (const message of sub) {
-    loggerService.debug(`${Date.now().toLocaleString()} sid:[${message?.sid}] subject:[${message.subject}]: ${message.data.length}`);
-    const decodedMessage = FRMSMessage.decode(message.data);
-    const objMessages = FRMSMessage.toObject(decodedMessage) as unknown;
-    return objMessages as string;
+    console.debug(`${Date.now().toLocaleString()} sid:[${message?.sid}] subject:[${message.subject}]: ${message.data.length}`);
+    return message.json<string>();
   }
-};
+}
