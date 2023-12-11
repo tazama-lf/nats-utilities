@@ -35,19 +35,17 @@ ENV FUNCTION_NAME="transaction-monitoring-service-rel-1-0-0"
 ENV NODE_ENV="production"
 
 ENV STARTUP_TYPE=nats
-ENV SERVER_URL=0.0.0.0:14222
+ENV SERVER_URL=0.0.0.0:4222
 ENV ACK_POLICY=Explicit
 ENV PRODUCER_STORAGE=File
 ENV PRODUCER_RETENTION_POLICY=Workqueue
 
-ENV APM_LOGGING=false
+ENV APM_LOGGING=true
 ENV APM_URL=http://apm-server.development:8200
 ENV APM_SECRET_TOKEN=
 
 ENV prefix_logs="false"
 
-EXPOSE 80
-
 HEALTHCHECK --interval=60s CMD [ -e /tmp/.lock ] || exit 1
 
-CMD ["npm", "start"]
+CMD ["build/index.js"]
