@@ -46,6 +46,8 @@ ENV APM_SECRET_TOKEN=
 
 ENV prefix_logs="false"
 
+EXPOSE 3000
+
 HEALTHCHECK --interval=60s CMD [ -e /tmp/.lock ] || exit 1
 
 CMD ["build/index.js"]
