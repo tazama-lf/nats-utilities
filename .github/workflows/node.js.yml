@@ -32,6 +32,8 @@ jobs:
           scope: '@frmscoe'
       - name: Assign GH_TOKEN
         run: sed -i 's/${GH_TOKEN}/${{ secrets.GH_TOKEN }} /g' .npmrc
+      - name: Turn Off APM LOGGING
+        run: sed -i 's/ENV APM_LOGGING=true/ENV APM_LOGGING=false /g' Dockerfile
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to Docker Hub
