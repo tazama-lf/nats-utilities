@@ -41,6 +41,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}/nats-utilities:latest
+          tags: ghcr.io/${{ github.repository }}:latest
 
 
