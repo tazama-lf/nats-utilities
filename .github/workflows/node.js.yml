@@ -40,5 +40,5 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}/nats-utilities:latest
       - name: Debug
-        uses: cat Dockerfile
+        run: cat Dockerfile
 
