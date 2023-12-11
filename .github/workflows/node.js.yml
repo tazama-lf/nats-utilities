@@ -30,8 +30,6 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           # Defaults to the user or organization that owns the workflow file
           scope: '@frmscoe'
-      - name: install Dependecies
-        run: npm ci
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
