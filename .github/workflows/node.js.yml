@@ -32,6 +32,8 @@ jobs:
           scope: '@frmscoe'
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+      - name: Assign GH_TOKEN
+        run: sed -i 's/${GH_TOKEN}/${{ secrets.GITHUB_TOKEN }} /g' .npmrc
       - name: Debug
         run: cat Dockerfile
       - name: Build and push Docker image
