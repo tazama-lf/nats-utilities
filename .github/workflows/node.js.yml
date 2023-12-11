@@ -4,9 +4,9 @@
 name: Build and Push Docker Image
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "*  " ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "*" ]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,7 +33,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Assign GH_TOKEN
-        run: sed -i 's/${GH_TOKEN}/${{ secrets.GITHUB_TOKEN }} /g' .npmrc
+        run: sed -i 's/${GH_TOKEN}/${{ secrets.GH_TOKEN }} /g' .npmrc
       - name: Debug
         run: cat Dockerfile
       - name: Build and push Docker image
