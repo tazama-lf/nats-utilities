@@ -31,7 +31,7 @@ ENV NPM_CONFIG_LOGLEVEL warn
 WORKDIR /home/app
 
 ENV REST_PORT=3000
-ENV FUNCTION_NAME="transaction-monitoring-service-rel-1-0-0"
+ENV FUNCTION_NAME="nats-utilities"
 ENV NODE_ENV="production"
 
 ENV STARTUP_TYPE=nats
