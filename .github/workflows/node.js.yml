@@ -4,9 +4,8 @@
 name: Build and Push Docker Image
 on:
   push:
-    branches: [ "*" ]
-  pull_request:
-    branches: [ "*" ]
+    branches:
+      - 'main'
 jobs:
   build:
     runs-on: ubuntu-latest
