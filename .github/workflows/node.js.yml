@@ -4,7 +4,7 @@
 name: Build and Push Docker Image
 on:
   push:
-    branches: [ "*  " ]
+    branches: [ "*" ]
   pull_request:
     branches: [ "*" ]
 jobs:
@@ -31,13 +31,9 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: '@frmscoe'
       - name: Assign GH_TOKEN
-        run: sed -i 's/${GH_TOKEN}/${{ secrets.GH_TOKEN }} /g' .npmrc
+        run: sed -i 's/${GH_TOKEN}/${{ secrets.GITHUB_TOKEN }} /g' .npmrc
       - name: Turn Off APM LOGGING
         run: sed -i "s|ENV APM_LOGGING=true|ENV APM_LOGGING=false|g" Dockerfile
-      - name: Change default Port
-        run: sed -i "s|ENV REST_PORT=3000|ENV REST_PORT=3001|g" Dockerfile
-      - name: Change default Port exposed
-        run: sed -i "s|EXPOSE 3000|EXPOSE 3001|g" Dockerfile
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to Docker Hub
