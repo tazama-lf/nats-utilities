@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 FROM node:16 AS builder
 LABEL stage=build
 
