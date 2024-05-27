@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import { AckPolicy, Consumer, ConsumerConfig, StringCodec, connect } from 'nats';
 import { config } from '../config';
 

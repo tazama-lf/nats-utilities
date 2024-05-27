@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+
 name: 'nats-utilities'
 description: 'Rest at 3000 to nats at subcription'
 author: '${{ github.repository_owner }}'

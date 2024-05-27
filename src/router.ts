@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 import Router from 'koa-router';
 import { healthCheck } from './health.controller';
 import { natsPublish } from './app.controller';
