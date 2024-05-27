@@ -43,7 +43,7 @@
     "@types/koa": "^2.13.6",
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-router": "^7.4.4",
-    "axios": "^0.21.4",
+    "axios": "^0.28.0",
     "dotenv": "^16.3.1",
     "elastic-apm-node": "^3.46.0",
     "koa": "^2.13.1",
