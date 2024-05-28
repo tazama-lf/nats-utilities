@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: nats-utilities-rel-1-0-0
-          image: actio.azurecr.io/nats-utilities-rel-1-0-0:1.0.0
+          image: example.io/nats-utilities-rel-1-0-0:1.0.0
           ports:
             - name: http	            
               protocol: TCP
