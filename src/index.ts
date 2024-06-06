@@ -33,11 +33,11 @@ const runServer = async (): Promise<App> => {
 };
 
 process.on('uncaughtException', (err) => {
-  loggerService.error(`process on uncaughtException error: `, err);
+  loggerService.error('process on uncaughtException error: ', err);
 });
 
 process.on('unhandledRejection', (err) => {
-  loggerService.error(`process on unhandledRejection error: `, err);
+  loggerService.error('process on unhandledRejection error: ', err);
 });
 
 (async () => {

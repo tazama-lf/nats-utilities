@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { AckPolicy, Consumer, ConsumerConfig, StringCodec, connect } from 'nats';
+import { AckPolicy, type Consumer, type ConsumerConfig, StringCodec, connect } from 'nats';
 import { config } from '../config';
 
 export const jetStreamPublish = async (message: unknown, producerStreamName: string) => {
@@ -56,4 +56,4 @@ export const onJetStreamMessage = async (consumer: Consumer) => {
     return request;
   }
 
-}
+};

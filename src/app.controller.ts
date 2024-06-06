@@ -30,7 +30,7 @@ export const natsPublish = async (ctx: Context): Promise<any> => {
         break;
 
       case 'nats':
-        loggerService.log(`nats communication was triggered`);
+        loggerService.log('nats communication was triggered');
         subscription = await natsServiceSubscribe(natsConsumer, functionName);
         loggerService.log(`Subscription to ${String(natsConsumer)} was done`);
         returnMessage = onMessage(subscription.subscription);
