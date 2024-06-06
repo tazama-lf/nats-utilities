@@ -18,7 +18,7 @@ export const tms = async (ctx: Context): Promise<unknown> => {
 
     switch (config.startupType) {
       case 'jetstream':
-        let consumer = await jetStreamConsume(natsConsumer, functionName);
+        const consumer = await jetStreamConsume(natsConsumer, functionName);
         returnMessage = onJetStreamMessage(consumer);
         const httpReponseJetStream = await axios.post(endpoint, transaction);
         await returnMessage.then((message) => {
@@ -27,6 +27,7 @@ export const tms = async (ctx: Context): Promise<unknown> => {
 
         responseHttp.tmsResponse = httpReponseJetStream.data;
         responseHttp.edResponse = returnMessage;
+        responseHttp.status = httpReponseJetStream.status;
         break;
 
       case 'nats':
@@ -42,14 +43,13 @@ export const tms = async (ctx: Context): Promise<unknown> => {
 
         responseHttp.tmsResponse = httpResponseNATS.data;
         responseHttp.edResponse = returnMessage;
+        responseHttp.status = httpResponseNATS.status;
         break;
       default:
         break;
     }
 
-    const resps = await axios.post(endpoint, transaction);
     ctx.body = responseHttp;
-    ctx.status = resps.status;
   } catch (error) {
     loggerService.log(error as string);
 
