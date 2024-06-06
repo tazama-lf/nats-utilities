@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
-FROM node:16 AS builder
+FROM node:20-bullseye AS builder
 LABEL stage=build
 
 # Create a folder named function
@@ -22,7 +22,7 @@ RUN npm ci --omit=dev --ignore-scripts
 # Build the project
 RUN npm run build
 
-FROM gcr.io/distroless/nodejs16-debian11:nonroot
+FROM gcr.io/distroless/nodejs20-debian11:nonroot
 USER nonroot
 
 COPY --from=builder /home/app /home/app
