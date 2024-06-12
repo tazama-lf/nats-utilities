@@ -44,6 +44,7 @@ class App extends Koa {
   }
 
   listen(...args: any[]): Server {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const server = super.listen(...args);
     this.servers.push(server);
     return server;
