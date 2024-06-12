@@ -5,18 +5,19 @@ import { config } from './config';
 import { loggerService } from '.';
 import { jetStreamConsume, jetStreamPublish, onJetStreamMessage } from './services/jetStreamService';
 import { natsServiceSubscribe, natsServicePublish, onMessage } from './services/natsService';
+import type { NatsConnection, Subscription } from 'nats';
 
-export const natsPublish = async (ctx: Context): Promise<any> => {
+export const natsPublish = async (ctx: Context): Promise<unknown> => {
   try {
     const request = ctx.request.body ?? JSON.parse('');
-    const natsDestination = request.destination;
-    const natsConsumer = request.consumer;
-    const functionName = request.functionName;
+    const natsDestination = request.destination as string;
+    const natsConsumer = request.consumer as string;
+    const functionName = request.functionName as string;
 
     loggerService.log(`${String(natsConsumer)} sub - ${String(natsDestination)} pub - ${String(functionName)} Function name`);
 
     let returnMessage;
-    let subscription;
+    let subscription: { subscription: Subscription, natsCon: NatsConnection };
     let consumer;
 
     switch (config.startupType) {
@@ -30,11 +31,11 @@ export const natsPublish = async (ctx: Context): Promise<any> => {
         break;
 
       case 'nats':
-        loggerService.log(`nats communication was triggered`);
+        loggerService.log('nats communication was triggered');
         subscription = await natsServiceSubscribe(natsConsumer, functionName);
         loggerService.log(`Subscription to ${String(natsConsumer)} was done`);
         returnMessage = onMessage(subscription.subscription);
-        natsServicePublish(subscription.natsCon, request.message, natsDestination);
+        natsServicePublish(subscription.natsCon, request.message as object, natsDestination);
         loggerService.log(`Publish to ${String(natsDestination)} was done`);
         await returnMessage.then((message) => {
           returnMessage = message;
