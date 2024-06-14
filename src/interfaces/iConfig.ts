@@ -7,6 +7,6 @@ export interface IConfig {
   apmSecretToken: string;
   apmURL: string;
   functionName: string;
-  startupType: 'nats' | 'jetstream'
+  startupType: 'nats' | 'jetstream';
   serverUrl: string;
 }

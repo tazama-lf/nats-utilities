@@ -5,7 +5,67 @@ import { config } from './config';
 import { loggerService } from '.';
 import { jetStreamConsume, jetStreamPublish, onJetStreamMessage } from './services/jetStreamService';
 import { natsServiceSubscribe, natsServicePublish, onMessage } from './services/natsService';
-import type { NatsConnection, Subscription } from 'nats';
+import axios from 'axios';
+import { type NatsConnection, type Subscription } from 'nats';
+import { type RequestBody } from './interfaces/iRequestBody';
+
+export const tms = async (ctx: Context): Promise<unknown> => {
+  const responseHttp: Record<string, unknown> = {};
+  try {
+    const { transaction, endpoint, natsConsumer, functionName } = ctx.request.body as RequestBody;
+
+    let returnMessage;
+    let subscription;
+    let consumer;
+    let httpReponseJetStream;
+    let httpResponseNATS;
+
+    switch (config.startupType) {
+      case 'jetstream':
+        consumer = await jetStreamConsume(natsConsumer, functionName);
+        returnMessage = onJetStreamMessage(consumer);
+        httpReponseJetStream = await axios.post(endpoint, transaction);
+        await returnMessage.then((message) => {
+          returnMessage = message;
+        });
+
+        responseHttp.tmsResponse = httpReponseJetStream.data;
+        responseHttp.edResponse = returnMessage;
+        responseHttp.status = httpReponseJetStream.status;
+        break;
+
+      case 'nats':
+        loggerService.log('nats communication was triggered');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- NATS is returning Promise<any>
+        subscription = await natsServiceSubscribe(natsConsumer, functionName);
+        loggerService.log(`Subscription to ${String(natsConsumer)} was done`);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- NATS is returning Promise<any>
+        returnMessage = onMessage(subscription.subscription);
+        httpResponseNATS = await axios.post(endpoint, transaction);
+        loggerService.log(`REST Publish to ${String(endpoint)} was done`);
+        await returnMessage.then((message) => {
+          returnMessage = message;
+        });
+
+        responseHttp.tmsResponse = httpResponseNATS.data;
+        responseHttp.edResponse = returnMessage;
+        responseHttp.status = httpResponseNATS.status;
+        break;
+      default:
+        break;
+    }
+
+    ctx.body = responseHttp;
+  } catch (error) {
+    loggerService.log(error as string);
+
+    ctx.status = 500;
+    ctx.body = {
+      error,
+    };
+  }
+  return ctx;
+};
 
 export const natsPublish = async (ctx: Context): Promise<unknown> => {
   try {
@@ -17,7 +77,7 @@ export const natsPublish = async (ctx: Context): Promise<unknown> => {
     loggerService.log(`${String(natsConsumer)} sub - ${String(natsDestination)} pub - ${String(functionName)} Function name`);
 
     let returnMessage;
-    let subscription: { subscription: Subscription, natsCon: NatsConnection };
+    let subscription: { subscription: Subscription; natsCon: NatsConnection };
     let consumer;
 
     switch (config.startupType) {

@@ -44,7 +44,6 @@ export const jetStreamConsume = async (consumerStreamName: string, functionName:
   return await js.consumers.get(consumerStreamName, functionName);
 };
 
-
 export const onJetStreamMessage = async (consumer: Consumer): Promise<string | undefined> => {
   // create a simple consumer and iterate over messages matching the subscription
   const sub = await consumer.consume({ max_messages: 1 });
@@ -57,5 +56,4 @@ export const onJetStreamMessage = async (consumer: Consumer): Promise<string | u
     message.ack();
     return request;
   }
-
 };
