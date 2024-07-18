@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 export interface IConfig {
   nodeEnv: string;
   restPort: number;
@@ -5,6 +7,6 @@ export interface IConfig {
   apmSecretToken: string;
   apmURL: string;
   functionName: string;
-  startupType: "nats" | "jetstream"
+  startupType: 'nats' | 'jetstream';
   serverUrl: string;
 }

@@ -1,7 +1,9 @@
-import { AckPolicy, Consumer, ConsumerConfig, StringCodec, connect } from 'nats';
+// SPDX-License-Identifier: Apache-2.0
+
+import { AckPolicy, type Consumer, type ConsumerConfig, StringCodec, connect } from 'nats';
 import { config } from '../config';
 
-export const jetStreamPublish = async (message: unknown, producerStreamName: string) => {
+export const jetStreamPublish = async (message: unknown, producerStreamName: string): Promise<void> => {
   const natsConn = await connect({
     servers: config.serverUrl,
   });
@@ -42,16 +44,16 @@ export const jetStreamConsume = async (consumerStreamName: string, functionName:
   return await js.consumers.get(consumerStreamName, functionName);
 };
 
-
-export const onJetStreamMessage = async (consumer: Consumer) => {
+export const onJetStreamMessage = async (consumer: Consumer): Promise<string | undefined> => {
   // create a simple consumer and iterate over messages matching the subscription
   const sub = await consumer.consume({ max_messages: 1 });
 
+  // NOTE: disable next line - stream
+  // eslint-disable-next-line no-unreachable-loop
   for await (const message of sub) {
     console.debug(`${Date.now().toLocaleString()} S:[${message?.seq}] Q:[${message.subject}]: ${message.data.length}`);
     const request = message.json<string>();
     message.ack();
     return request;
   }
-
-}
+};

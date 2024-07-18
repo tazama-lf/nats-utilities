@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type Server } from 'http';
 import Koa from 'koa';
@@ -42,6 +44,7 @@ class App extends Koa {
   }
 
   listen(...args: any[]): Server {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const server = super.listen(...args);
     this.servers.push(server);
     return server;

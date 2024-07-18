@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+
 /* eslint-disable no-console */
 import { LoggerService } from '@frmscoe/frms-coe-lib';
 import apm from 'elastic-apm-node';
@@ -31,11 +33,11 @@ const runServer = async (): Promise<App> => {
 };
 
 process.on('uncaughtException', (err) => {
-  loggerService.error(`process on uncaughtException error: `, err);
+  loggerService.error('process on uncaughtException error: ', err);
 });
 
 process.on('unhandledRejection', (err) => {
-  loggerService.error(`process on unhandledRejection error: `, err);
+  loggerService.error('process on unhandledRejection error: ', err);
 });
 
 (async () => {
@@ -47,4 +49,3 @@ process.on('unhandledRejection', (err) => {
 })();
 
 export { runServer };
-
