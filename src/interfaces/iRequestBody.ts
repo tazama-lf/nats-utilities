@@ -3,4 +3,5 @@ export interface RequestBody {
   endpoint: string;
   natsConsumer: string;
   functionName: string;
+  awaitReply?: boolean;
 }
