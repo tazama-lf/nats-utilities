@@ -5,7 +5,7 @@
 
 import { type NatsConnection, type Subscription, connect } from 'nats';
 import { config } from '../config';
-import FRMSMessage from '@frmscoe/frms-coe-lib/lib/helpers/protobuf';
+import FRMSMessage from '@tazama-lf/frms-coe-lib/lib/helpers/protobuf';
 import { loggerService } from '../';
 
 export const natsServicePublish = (natsConnection: NatsConnection, message: object, producerStreamName: string): void => {

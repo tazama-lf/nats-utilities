@@ -1,20 +1,21 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /* eslint-disable no-console */
-import { LoggerService } from '@frmscoe/frms-coe-lib';
+import { LoggerService } from '@tazama-lf/frms-coe-lib';
 import apm from 'elastic-apm-node';
 import App from './app';
 import { config } from './config';
+import { validateAPMConfig } from '@tazama-lf/frms-coe-lib/lib/helpers/env';
 
-if (config.apmLogging) {
+const apmConfig = validateAPMConfig();
+if (apmConfig.apmActive) {
   apm.start({
-    serviceName: config.functionName,
-    secretToken: config.apmSecretToken,
-    serverUrl: config.apmURL,
+    serviceName: apmConfig.apmServiceName,
+    secretToken: apmConfig.apmSecretToken,
+    serverUrl: apmConfig.apmUrl,
     usePathAsTransactionName: true,
-    active: config.apmLogging,
+    active: apmConfig.apmActive,
     transactionIgnoreUrls: ['/health'],
-    disableInstrumentations: ['log4js'],
   });
 }
 
