@@ -32,7 +32,7 @@ ENV NPM_CONFIG_LOGLEVEL warn
 
 WORKDIR /home/app
 
-ENV REST_PORT=3000
+ENV PORT=3000
 ENV FUNCTION_NAME="nats-utilities"
 ENV NODE_ENV="production"
 
@@ -42,14 +42,13 @@ ENV ACK_POLICY=Explicit
 ENV PRODUCER_STORAGE=File
 ENV PRODUCER_RETENTION_POLICY=Workqueue
 
-ENV APM_LOGGING=true
+ENV APM_ACTIVE=true
 ENV APM_URL=http://apm-server.development:8200
 ENV APM_SECRET_TOKEN=
+ENV APM_SERVICE_NAME=nats-utilities
 
 ENV prefix_logs="false"
 
 EXPOSE 3000
-
-HEALTHCHECK --interval=60s CMD [ -e /tmp/.lock ] || exit 1
 
 CMD ["build/index.js"]
