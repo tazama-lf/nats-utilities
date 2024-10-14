@@ -50,7 +50,8 @@ Message body:
     "transaction": {},
     "endpoint": "",
     "natsConsumer": "",
-    "functionName": ""
+    "functionName": "",
+    "awaitReply": true
 }
 ```
  
