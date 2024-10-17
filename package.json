@@ -39,7 +39,7 @@
     "test:integration": "npm run test ./src --detectOpenHandles"
   },
   "dependencies": {
-    "@tazama-lf/frms-coe-lib": "^5.0.0-rc.2",
+    "@tazama-lf/frms-coe-lib": "^5.0.0-rc.3",
     "@types/koa": "^2.13.6",
     "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-router": "^7.4.4",
