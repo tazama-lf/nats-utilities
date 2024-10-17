@@ -4,6 +4,7 @@
 import path from 'path';
 import { config as dotenv } from 'dotenv';
 import { type IConfig } from './interfaces';
+import { validateEnvVar } from '@tazama-lf/frms-coe-lib/lib/config';
 
 // Load .env file into process.env if it exists. This is convenient for running locally.
 dotenv({
@@ -11,14 +12,11 @@ dotenv({
 });
 
 const config: IConfig = {
-  functionName: process.env.FUNCTION_NAME!,
-  nodeEnv: process.env.NODE_ENV!,
-  restPort: parseInt(process.env.REST_PORT!, 10) || 3000,
-  apmLogging: process.env.APM_LOGGING === 'true',
-  apmSecretToken: process.env.APM_SECRET_TOKEN!,
-  apmURL: process.env.APM_URL!,
-  startupType: process.env.STARTUP_TYPE as 'nats' | 'jetstream',
-  serverUrl: process.env.SERVER_URL!,
+  functionName: validateEnvVar<string>('FUNCTION_NAME', 'string'),
+  nodeEnv: validateEnvVar<string>('NODE_ENV', 'string'),
+  restPort: validateEnvVar<number>('PORT', 'number', true) || 3000,
+  startupType: validateEnvVar<'nats' | 'jetstream'>('STARTUP_TYPE', 'string'),
+  serverUrl: validateEnvVar<string>('SERVER_URL', 'string'),
 };
 
 export { config };

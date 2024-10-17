@@ -12,22 +12,31 @@ import { type RequestBody } from './interfaces/iRequestBody';
 export const tms = async (ctx: Context): Promise<unknown> => {
   const responseHttp: Record<string, unknown> = {};
   try {
-    const { transaction, endpoint, natsConsumer, functionName } = ctx.request.body as RequestBody;
+    const { transaction, endpoint, natsConsumer, functionName, awaitReply } = ctx.request.body as RequestBody;
 
     let returnMessage;
     let subscription;
     let consumer;
     let httpReponseJetStream;
     let httpResponseNATS;
+    let reply;
 
     switch (config.startupType) {
       case 'jetstream':
         consumer = await jetStreamConsume(natsConsumer, functionName);
         returnMessage = onJetStreamMessage(consumer);
         httpReponseJetStream = await axios.post(endpoint, transaction);
-        await returnMessage.then((message) => {
+
+        reply = returnMessage.then((message) => {
           returnMessage = message;
         });
+
+        if (awaitReply) {
+          loggerService.log('Awaiting response');
+          await reply;
+        } else {
+          loggerService.log('Not waiting for response');
+        }
 
         responseHttp.tmsResponse = httpReponseJetStream.data;
         responseHttp.edResponse = returnMessage;
@@ -43,9 +52,16 @@ export const tms = async (ctx: Context): Promise<unknown> => {
         returnMessage = onMessage(subscription.subscription);
         httpResponseNATS = await axios.post(endpoint, transaction);
         loggerService.log(`REST Publish to ${String(endpoint)} was done`);
-        await returnMessage.then((message) => {
+        reply = returnMessage.then((message) => {
           returnMessage = message;
         });
+
+        if (awaitReply) {
+          loggerService.log('Awaiting response');
+          await reply;
+        } else {
+          loggerService.log('Not waiting for response');
+        }
 
         responseHttp.tmsResponse = httpResponseNATS.data;
         responseHttp.edResponse = returnMessage;
@@ -74,20 +90,29 @@ export const natsPublish = async (ctx: Context): Promise<unknown> => {
     const natsConsumer = request.consumer as string;
     const functionName = request.functionName as string;
 
+    const awaitReply: boolean | undefined = request.awaitReply;
+
     loggerService.log(`${String(natsConsumer)} sub - ${String(natsDestination)} pub - ${String(functionName)} Function name`);
 
     let returnMessage;
     let subscription: { subscription: Subscription; natsCon: NatsConnection };
     let consumer;
+    let reply;
 
     switch (config.startupType) {
       case 'jetstream':
         consumer = await jetStreamConsume(natsConsumer, functionName);
         returnMessage = onJetStreamMessage(consumer);
         await jetStreamPublish(request.message, natsDestination);
-        await returnMessage.then((message) => {
+        reply = returnMessage.then((message) => {
           returnMessage = message;
         });
+        if (awaitReply) {
+          loggerService.log('Awaiting response');
+          await reply;
+        } else {
+          loggerService.log('Not waiting for response');
+        }
         break;
 
       case 'nats':
@@ -97,9 +122,16 @@ export const natsPublish = async (ctx: Context): Promise<unknown> => {
         returnMessage = onMessage(subscription.subscription);
         natsServicePublish(subscription.natsCon, request.message as object, natsDestination);
         loggerService.log(`Publish to ${String(natsDestination)} was done`);
-        await returnMessage.then((message) => {
+        reply = returnMessage.then((message) => {
           returnMessage = message;
         });
+
+        if (awaitReply) {
+          loggerService.log('Awaiting response');
+          await reply;
+        } else {
+          loggerService.log('Not waiting for response');
+        }
         break;
       default:
         break;

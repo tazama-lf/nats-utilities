@@ -1,24 +1,15 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /* eslint-disable no-console */
-import { LoggerService } from '@frmscoe/frms-coe-lib';
-import apm from 'elastic-apm-node';
+import { LoggerService } from '@tazama-lf/frms-coe-lib';
 import App from './app';
 import { config } from './config';
 
-if (config.apmLogging) {
-  apm.start({
-    serviceName: config.functionName,
-    secretToken: config.apmSecretToken,
-    serverUrl: config.apmURL,
-    usePathAsTransactionName: true,
-    active: config.apmLogging,
-    transactionIgnoreUrls: ['/health'],
-    disableInstrumentations: ['log4js'],
-  });
-}
-
-export const loggerService: LoggerService = new LoggerService();
+export const loggerService: LoggerService = new LoggerService({
+  maxCPU: 1,
+  functionName: config.functionName,
+  nodeEnv: config.nodeEnv,
+});
 const runServer = async (): Promise<App> => {
   /**
    * KOA Rest Server
