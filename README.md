@@ -118,10 +118,10 @@ Message body:
 }
 ```
 
-Message - This the incomming message for the processor. Your Rulerequest, Typologyrequest, etc.
-Destination - This is the Subject you are trying to send your request to. (Input)
-NatsConsumer - This will be the Subject you are listening to for a response. (Output)
-FunctionName - Used for the persistent name of the Subject. This is the name of the processor you are testing.
+Message - This the incomming message for the processor. Your Rulerequest, Typologyrequest, etc.  
+Destination - This is the Subject you are trying to send your request to. (Input)  
+NatsConsumer - This will be the Subject you are listening to for a response. (Output)  
+FunctionName - Used for the persistent name of the Subject. This is the name of the processor you are testing.  
 AwaitReply - Whether or not you are awaiting the response.
 
 ### REST
@@ -141,10 +141,10 @@ Message body:
 }
 ```
 
-Transaction - This will be your Transaction. In most cases this will be a Pacs002.
-Endpoint - Your TMS URL where the transaction should be submitted. (Input)
-NatsConsumer - This will be the Subject you are listening to for a response. (Output)
-FunctionName - Used for the persistent name of the Subject. This is the name of the processor you are testing. (TMS)
+Transaction - This will be your Transaction. In most cases this will be a Pacs002.  
+Endpoint - Your TMS URL where the transaction should be submitted. (Input)  
+NatsConsumer - This will be the Subject you are listening to for a response. (Output)  
+FunctionName - Used for the persistent name of the Subject. This is the name of the processor you are testing. (TMS)  
 AwaitReply - Whether or not you are awaiting the response.
 
 When targeting the TMS-API, you would want to use this endpoint.
