@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
 
-/* eslint-disable no-console */
 import { LoggerService } from '@tazama-lf/frms-coe-lib';
 import App from './app';
 import { config } from './config';
@@ -10,7 +9,7 @@ export const loggerService: LoggerService = new LoggerService({
   functionName: config.functionName,
   nodeEnv: config.nodeEnv,
 });
-const runServer = async (): Promise<App> => {
+const runServer = (): App => {
   /**
    * KOA Rest Server
    */
@@ -31,12 +30,10 @@ process.on('unhandledRejection', (err) => {
   loggerService.error('process on unhandledRejection error: ', err);
 });
 
-(async () => {
-  try {
-    await runServer();
-  } catch (err) {
-    loggerService.error(`Error while starting HTTP server on Worker ${process.pid}`, err);
-  }
-})();
+try {
+  runServer();
+} catch (err) {
+  loggerService.error(`Error while starting HTTP server on Worker ${process.pid}`, err);
+}
 
 export { runServer };
