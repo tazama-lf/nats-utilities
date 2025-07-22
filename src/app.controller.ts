@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { type Context } from 'koa';
+import type { Context } from 'koa';
 import { config } from './config';
 import { loggerService } from '.';
 import { jetStreamConsume, jetStreamPublish, onJetStreamMessage } from './services/jetStreamService';
 import { natsServiceSubscribe, natsServicePublish, onMessage } from './services/natsService';
 import axios from 'axios';
-import { type NatsConnection, type Subscription } from 'nats';
-import { type RequestBody } from './interfaces/iRequestBody';
+import type { RequestBody } from './interfaces/iRequestBody';
+import type { LocalSubscription } from './interfaces/iNatsSubscription';
 
 export const tms = async (ctx: Context): Promise<unknown> => {
   const responseHttp: Record<string, unknown> = {};
@@ -15,7 +15,7 @@ export const tms = async (ctx: Context): Promise<unknown> => {
     const { transaction, endpoint, natsConsumer, functionName, awaitReply } = ctx.request.body as RequestBody;
 
     let returnMessage;
-    let subscription;
+    let subscription: LocalSubscription;
     let consumer;
     let httpReponseJetStream;
     let httpResponseNATS;
@@ -45,13 +45,13 @@ export const tms = async (ctx: Context): Promise<unknown> => {
 
       case 'nats':
         loggerService.log('nats communication was triggered');
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- NATS is returning Promise<any>
+
         subscription = await natsServiceSubscribe(natsConsumer, functionName);
-        loggerService.log(`Subscription to ${String(natsConsumer)} was done`);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- NATS is returning Promise<any>
+        loggerService.log(`Subscription to ${natsConsumer} was done`);
+
         returnMessage = onMessage(subscription.subscription);
         httpResponseNATS = await axios.post(endpoint, transaction);
-        loggerService.log(`REST Publish to ${String(endpoint)} was done`);
+        loggerService.log(`REST Publish to ${endpoint} was done`);
         reply = returnMessage.then((message) => {
           returnMessage = message;
         });
@@ -66,8 +66,6 @@ export const tms = async (ctx: Context): Promise<unknown> => {
         responseHttp.tmsResponse = httpResponseNATS.data;
         responseHttp.edResponse = returnMessage;
         responseHttp.status = httpResponseNATS.status;
-        break;
-      default:
         break;
     }
 
@@ -85,17 +83,19 @@ export const tms = async (ctx: Context): Promise<unknown> => {
 
 export const natsPublish = async (ctx: Context): Promise<unknown> => {
   try {
-    const request = ctx.request.body ?? JSON.parse('');
-    const natsDestination = request.destination as string;
-    const natsConsumer = request.consumer as string;
-    const functionName = request.functionName as string;
+    const request = ctx.request.body as {
+      destination: string;
+      consumer: string;
+      functionName: string;
+      awaitReply?: boolean;
+      message: unknown;
+    };
+    const { functionName, destination: natsDestination, consumer: natsConsumer, awaitReply } = request;
 
-    const awaitReply: boolean | undefined = request.awaitReply;
-
-    loggerService.log(`${String(natsConsumer)} sub - ${String(natsDestination)} pub - ${String(functionName)} Function name`);
+    loggerService.log(`${natsConsumer} sub - ${natsDestination} pub - ${functionName} Function name`);
 
     let returnMessage;
-    let subscription: { subscription: Subscription; natsCon: NatsConnection };
+    let subscription: LocalSubscription;
     let consumer;
     let reply;
 
@@ -118,10 +118,10 @@ export const natsPublish = async (ctx: Context): Promise<unknown> => {
       case 'nats':
         loggerService.log('nats communication was triggered');
         subscription = await natsServiceSubscribe(natsConsumer, functionName);
-        loggerService.log(`Subscription to ${String(natsConsumer)} was done`);
+        loggerService.log(`Subscription to ${natsConsumer} was done`);
         returnMessage = onMessage(subscription.subscription);
         natsServicePublish(subscription.natsCon, request.message as object, natsDestination);
-        loggerService.log(`Publish to ${String(natsDestination)} was done`);
+        loggerService.log(`Publish to ${natsDestination} was done`);
         reply = returnMessage.then((message) => {
           returnMessage = message;
         });
@@ -132,8 +132,6 @@ export const natsPublish = async (ctx: Context): Promise<unknown> => {
         } else {
           loggerService.log('Not waiting for response');
         }
-        break;
-      default:
         break;
     }
 
