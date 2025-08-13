@@ -2,6 +2,7 @@
 
 import { AckPolicy, type Consumer, type ConsumerConfig, StringCodec, connect } from 'nats';
 import { config } from '../config';
+import { loggerService } from '..';
 
 export const jetStreamPublish = async (message: unknown, producerStreamName: string): Promise<void> => {
   const natsConn = await connect({
@@ -13,14 +14,14 @@ export const jetStreamPublish = async (message: unknown, producerStreamName: str
   const js = natsConn.jetstream();
 
   await jsm.streams.find(producerStreamName).then(
-    async (stream) => {
+    async (_stream) => {
       const sc = StringCodec();
       const res = JSON.stringify(message);
 
       await js.publish(producerStreamName, sc.encode(res));
     },
-    async (reason) => {
-      console.log(JSON.stringify(reason, null, 4));
+    (reason: unknown) => {
+      loggerService.log(reason as string);
     },
   );
 };
@@ -45,13 +46,10 @@ export const jetStreamConsume = async (consumerStreamName: string, functionName:
 };
 
 export const onJetStreamMessage = async (consumer: Consumer): Promise<string | undefined> => {
-  // create a simple consumer and iterate over messages matching the subscription
-  const sub = await consumer.consume({ max_messages: 1 });
-
-  // NOTE: disable next line - stream
-  // eslint-disable-next-line no-unreachable-loop
-  for await (const message of sub) {
-    console.debug(`${Date.now().toLocaleString()} S:[${message?.seq}] Q:[${message.subject}]: ${message.data.length}`);
+  // consume a single message
+  const message = await consumer.next();
+  if (message) {
+    loggerService.debug(`${Date.now().toLocaleString()} S:[${message.seq}] Q:[${message.subject}]: ${message.data.length}`);
     const request = message.json<string>();
     message.ack();
     return request;

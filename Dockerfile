@@ -17,7 +17,7 @@ COPY ./.npmrc ./
 ARG GH_TOKEN
 
 # Install dependencies for production
-RUN npm ci --omit=dev --ignore-scripts
+RUN npm ci --ignore-scripts
 
 # Build the project
 RUN npm run build

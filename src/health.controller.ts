@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
-import { type Context, type Next } from 'koa';
+import type { Context, Next } from 'koa';
 import { loggerService } from '.';
 
 export const healthCheck = async (ctx: Context, next: Next): Promise<Context> => {
