@@ -15,7 +15,7 @@ const runServer = (): App => {
    */
   const app = new App();
 
-  app.listen(config.restPort, () => {
+  app.listen(config.restPort, '0.0.0.0', () => {
     loggerService.log(`API restServer listening on PORT ${config.restPort}`);
   });
 
