@@ -3,6 +3,7 @@
 import type { Server } from 'node:http';
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
+import koaCors from 'koa-cors';
 import router from './router';
 import { loggerService } from '.';
 
@@ -16,6 +17,14 @@ class App extends Koa {
     this.use(bodyParser());
     this.configureMiddlewares();
     this.configureRoutes();
+    this.use(
+      koaCors({
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+        headers: ['Content-Type', 'Authorization'],
+        credentials: true,
+      }),
+    );
   }
 
   configureMiddlewares(): void {
