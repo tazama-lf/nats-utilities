@@ -39,6 +39,7 @@
     "test:integration": "npm run test ./src --detectOpenHandles"
   },
   "dependencies": {
+    "@koa/cors": "^5.0.0",
     "@koa/router": "^13.1.1",
     "@tazama-lf/frms-coe-lib": "6.0.0",
     "@types/koa": "^2.15.0",
@@ -46,7 +47,6 @@
     "axios": "^1.12.2",
     "koa": "^3.0.0",
     "koa-bodyparser": "^4.4.1",
-    "koa-cors": "^0.0.16",
     "nats": "^2.29.3",
     "tslib": "^2.8.1",
     "typescript": "^5.8.3"
@@ -55,8 +55,8 @@
     "@eslint-community/eslint-plugin-eslint-comments": "^4.5.0",
     "@stylistic/eslint-plugin": "^5.2.0",
     "@types/jest": "^30.0.0",
+    "@types/koa__cors": "^5.0.1",
     "@types/koa__router": "^12.0.4",
-    "@types/koa-cors": "^0.0.6",
     "@typescript-eslint/eslint-plugin": "^8.37.0",
     "@typescript-eslint/parser": "^8.37.0",
     "eslint": "^9.31.0",

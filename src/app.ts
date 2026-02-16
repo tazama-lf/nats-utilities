@@ -3,7 +3,7 @@
 import type { Server } from 'node:http';
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
-import koaCors from 'koa-cors';
+import cors from '@koa/cors';
 import router from './router';
 import { loggerService } from '.';
 
@@ -14,17 +14,16 @@ class App extends Koa {
     super();
     // bodyparser needs to be loaded first in order to work - in fact, order for all the below is very import!
     this.servers = [];
+    this.use(
+      cors({
+        origin: 'http://localhost:5174',
+        allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+        allowHeaders: ['Content-Type', 'Authorization'],
+      }),
+    );
     this.use(bodyParser());
     this.configureMiddlewares();
     this.configureRoutes();
-    this.use(
-      koaCors({
-        origin: '*',
-        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-        headers: ['Content-Type', 'Authorization'],
-        credentials: true,
-      }),
-    );
   }
 
   configureMiddlewares(): void {
