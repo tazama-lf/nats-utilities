@@ -4,6 +4,7 @@ import type { Server } from 'node:http';
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import cors from '@koa/cors';
+import { config } from './config';
 import router from './router';
 import { loggerService } from '.';
 
@@ -16,7 +17,7 @@ class App extends Koa {
     this.servers = [];
     this.use(
       cors({
-        origin: 'http://localhost:5174',
+        origin: config.origin,
         allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
         allowHeaders: ['Content-Type', 'Authorization'],
       }),

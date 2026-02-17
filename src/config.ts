@@ -18,6 +18,7 @@ const config: IConfig = {
   restPort: (validateEnvVar('PORT', 'number', true) as number) || DEFAULT_PORT,
   startupType: validateEnvVar('STARTUP_TYPE', 'string') as 'nats' | 'jetstream',
   serverUrl: validateEnvVar('SERVER_URL', 'string') as string,
+  origin: validateEnvVar('ORIGIN', 'string') as string,
 };
 
 export { config };

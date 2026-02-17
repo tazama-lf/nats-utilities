@@ -6,4 +6,5 @@ export interface IConfig {
   functionName: string;
   startupType: 'nats' | 'jetstream';
   serverUrl: string;
+  origin: string;
 }
