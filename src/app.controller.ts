@@ -8,6 +8,7 @@ import { natsServiceSubscribe, natsServicePublish, onMessage } from './services/
 import axios from 'axios';
 import type { RequestBody } from './interfaces/iRequestBody';
 import type { LocalSubscription } from './interfaces/iNatsSubscription';
+// import { LoggerService } from '@tazama-lf/frms-coe-lib';
 
 export const tms = async (ctx: Context): Promise<unknown> => {
   const responseHttp: Record<string, unknown> = {};
@@ -83,6 +84,7 @@ export const tms = async (ctx: Context): Promise<unknown> => {
 
 export const natsPublish = async (ctx: Context): Promise<unknown> => {
   try {
+    loggerService.log('Received /natsPublish request');
     const request = ctx.request.body as {
       destination: string;
       consumer: string;
