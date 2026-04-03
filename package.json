@@ -1,6 +1,6 @@
 {
   "name": "nats-utilities",
-  "version": "3.0.0",
+  "version": "4.0.0-rc.0",
   "description": "Node.js (TypeScript) HTTP Service Testing NATS Microservices",
   "types": "build/index.d.ts",
   "main": "build/index.js",
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@koa/router": "^13.1.1",
-    "@tazama-lf/frms-coe-lib": "6.0.0",
+    "@tazama-lf/frms-coe-lib": "7.0.2-rc.2",
     "@types/koa": "^2.15.0",
     "@types/koa-bodyparser": "^4.3.12",
     "axios": "^1.12.2",
