@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # SPDX-License-Identifier: Apache-2.0
 
 FROM node:20-bullseye AS builder
@@ -14,10 +15,9 @@ COPY ./package.json ./
 COPY ./package-lock.json ./
 COPY ./tsconfig.json ./
 COPY ./.npmrc ./
-ARG GH_TOKEN
 
 # Install dependencies for production
-RUN npm ci --ignore-scripts
+RUN --mount=type=secret,id=GH_TOKEN,env=GH_TOKEN npm ci --ignore-scripts
 
 # Build the project
 RUN npm run build
