@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@koa/router": "^13.1.1",
-    "@tazama-lf/frms-coe-lib": "7.0.2-rc.2",
+    "@tazama-lf/frms-coe-lib": "8.0.0-rc.1",
     "@types/koa": "^2.15.0",
     "@types/koa-bodyparser": "^4.3.12",
     "axios": "^1.12.2",
