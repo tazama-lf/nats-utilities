@@ -1,6 +1,6 @@
 {
   "name": "nats-utilities",
-  "version": "4.0.0-rc.1",
+  "version": "4.0.0-rc.2",
   "description": "Node.js (TypeScript) HTTP Service Testing NATS Microservices",
   "types": "build/index.d.ts",
   "main": "build/index.js",
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@koa/router": "^13.1.1",
-    "@tazama-lf/frms-coe-lib": "8.0.0-rc.3",
+    "@tazama-lf/frms-coe-lib": "8.2.0-rc.6",
     "@types/koa": "^2.15.0",
     "@types/koa-bodyparser": "^4.3.12",
     "axios": "^1.12.2",
@@ -73,5 +73,9 @@
       "eslint --fix",
       "prettier --write"
     ]
+  },
+  "overrides": {
+    "uuid": "^11.1.1",
+    "@opentelemetry/core": "^2.8.0"
   }
 }
