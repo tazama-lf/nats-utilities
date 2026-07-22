@@ -1,0 +1,4 @@
+# Normalize line endings to LF for all text files.
+# Prevents CRLF/LF churn on Windows working trees (core.autocrlf) and
+# keeps them consistent with the Prettier `endOfLine: lf` setting.
+* text=auto eol=lf
