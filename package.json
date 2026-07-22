@@ -33,10 +33,10 @@
     "lint:eslint-no-inline": "eslint --no-inline-config \"**/*.ts\"",
     "lint:prettier": "prettier --check \"**/*.ts\"",
     "prepare": "husky",
-    "test": "jest --config=jest.config.ts --passWithNoTests",
+    "test": "jest --config=jest.config.ts",
     "test:watch": "jest --config=jest.config.ts --watch",
-    "test:unit": "npm run test ./src",
-    "test:integration": "npm run test ./src --detectOpenHandles"
+    "test:unit": "jest --config=jest.config.ts __tests__",
+    "test:integration": "jest --config=jest.config.ts __tests__ --detectOpenHandles"
   },
   "dependencies": {
     "@koa/router": "^13.1.1",
@@ -51,6 +51,8 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
+    "@commitlint/cli": "21.0.0",
+    "@commitlint/config-conventional": "21.0.0",
     "@eslint-community/eslint-plugin-eslint-comments": "^4.5.0",
     "@stylistic/eslint-plugin": "^5.2.0",
     "@types/jest": "^30.0.0",
